@@ -640,6 +640,17 @@ cp -r rules/* ~/.opencode/rules/  # Keep as separate directory
 # Convert and install hooks as plugins
 cp -r hooks/plugins/* ~/.config/opencode/plugins/
 
+# Install Plugin Dependencies (CRITICAL)
+cd ~/.config/opencode/plugins
+# Initialize package.json if it doesn't exist
+if [ ! -f package.json ]; then
+  npm init -y
+fi
+# Install required packages for plugins (e.g., prettier)
+npm install --save-dev typescript @types/node prettier
+# Verify compilation
+npx tsc --noEmit
+
 # Copy MCP configuration
 cp mcp-configs/opencode.json ~/.config/opencode/opencode.json
 
