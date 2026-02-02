@@ -1,0 +1,223 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "anthropic/claude-sonnet-4-5",
+  "small_model": "anthropic/claude-haiku-4-5",
+  
+  "instructions": [
+    ".opencode/rules/security.md",
+    ".opencode/rules/coding-style.md",
+    ".opencode/rules/testing.md",
+    ".opencode/rules/git-workflow.md",
+    ".opencode/rules/agents.md",
+    ".opencode/rules/performance.md",
+    ".opencode/rules/hooks.md",
+    ".opencode/rules/patterns.md"
+  ],
+  
+  "agent": {
+    "code-reviewer": {
+      "description": "Expert code review specialist for quality, security, and maintainability",
+      "model": "anthropic/claude-sonnet-4-5",
+      "prompt": "file:.opencode/agents/code-reviewer.md",
+      "tools": {
+        "read": true,
+        "grep": true,
+        "glob": true,
+        "bash": true,
+        "edit": false,
+        "write": false
+      }
+    },
+    "planner": {
+      "description": "Expert planning specialist for complex features and refactoring",
+      "model": "anthropic/claude-sonnet-4-5",
+      "prompt": "file:.opencode/agents/planner.md",
+      "tools": {
+        "read": true,
+        "grep": true,
+        "glob": true,
+        "bash": false,
+        "edit": false,
+        "write": false
+      }
+    },
+    "architect": {
+      "description": "Software architecture specialist for system design and scalability",
+      "model": "anthropic/claude-sonnet-4-5",
+      "prompt": "file:.opencode/agents/architect.md",
+      "tools": {
+        "read": true,
+        "grep": true,
+        "glob": true,
+        "bash": false,
+        "edit": false,
+        "write": false
+      }
+    },
+    "security-reviewer": {
+      "description": "Security vulnerability detection and remediation specialist",
+      "model": "anthropic/claude-sonnet-4-5",
+      "prompt": "file:.opencode/agents/security-reviewer.md",
+      "tools": {
+        "read": true,
+        "write": true,
+        "edit": true,
+        "bash": true,
+        "grep": true,
+        "glob": true
+      }
+    },
+    "tdd-guide": {
+      "description": "Test-Driven Development specialist enforcing write-tests-first methodology",
+      "model": "anthropic/claude-sonnet-4-5",
+      "prompt": "file:.opencode/agents/tdd-guide.md",
+      "tools": {
+        "read": true,
+        "write": true,
+        "edit": true,
+        "bash": true,
+        "grep": true,
+        "glob": false
+      }
+    },
+    "python-reviewer": {
+      "description": "Expert Python code reviewer specializing in PEP 8 and Pythonic idioms",
+      "model": "anthropic/claude-sonnet-4-5",
+      "prompt": "file:.opencode/agents/python-reviewer.md",
+      "tools": {
+        "read": true,
+        "grep": true,
+        "glob": true,
+        "bash": true,
+        "edit": false,
+        "write": false
+      }
+    },
+    "refactor-cleaner": {
+      "description": "Dead code cleanup and consolidation specialist",
+      "model": "anthropic/claude-sonnet-4-5",
+      "prompt": "file:.opencode/agents/refactor-cleaner.md",
+      "tools": {
+        "read": true,
+        "write": true,
+        "edit": true,
+        "bash": true,
+        "grep": true,
+        "glob": true
+      }
+    },
+    "go-reviewer": {
+      "description": "Expert Go code reviewer specializing in idiomatic Go and concurrency",
+      "model": "anthropic/claude-sonnet-4-5",
+      "prompt": "file:.opencode/agents/go-reviewer.md",
+      "tools": {
+        "read": true,
+        "grep": true,
+        "glob": true,
+        "bash": true,
+        "edit": false,
+        "write": false
+      }
+    },
+    "go-build-resolver": {
+      "description": "Go build, vet, and compilation error resolution specialist",
+      "model": "anthropic/claude-sonnet-4-5",
+      "prompt": "file:.opencode/agents/go-build-resolver.md",
+      "tools": {
+        "read": true,
+        "write": true,
+        "edit": true,
+        "bash": true,
+        "grep": true,
+        "glob": true
+      }
+    },
+    "e2e-runner": {
+      "description": "End-to-end testing specialist using Playwright",
+      "model": "anthropic/claude-sonnet-4-5",
+      "prompt": "file:.opencode/agents/e2e-runner.md",
+      "tools": {
+        "read": true,
+        "write": true,
+        "edit": true,
+        "bash": true,
+        "grep": true,
+        "glob": true
+      }
+    },
+    "database-reviewer": {
+      "description": "PostgreSQL database specialist for query optimization and schema design",
+      "model": "anthropic/claude-sonnet-4-5",
+      "prompt": "file:.opencode/agents/database-reviewer.md",
+      "tools": {
+        "read": true,
+        "write": true,
+        "edit": true,
+        "bash": true,
+        "grep": true,
+        "glob": true
+      }
+    },
+    "doc-updater": {
+      "description": "Documentation and codemap specialist",
+      "model": "anthropic/claude-sonnet-4-5",
+      "prompt": "file:.opencode/agents/doc-updater.md",
+      "tools": {
+        "read": true,
+        "write": true,
+        "edit": true,
+        "bash": true,
+        "grep": true,
+        "glob": true
+      }
+    },
+    "build-error-resolver": {
+      "description": "Build and TypeScript error resolution specialist",
+      "model": "anthropic/claude-sonnet-4-5",
+      "prompt": "file:.opencode/agents/build-error-resolver.md",
+      "tools": {
+        "read": true,
+        "write": true,
+        "edit": true,
+        "bash": true,
+        "grep": true,
+        "glob": true
+      }
+    }
+  },
+  
+  "mcp": {
+    "github": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-github"],
+      "enabled": false
+    },
+    "memory": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-memory"],
+      "enabled": false
+    },
+    "sequential-thinking": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "enabled": false
+    },
+    "filesystem": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-filesystem", "."],
+      "enabled": false
+    }
+  },
+  
+  "permission": {
+    "bash": "ask",
+    "edit": "ask",
+    "write": "ask"
+  },
+  
+  "skill": {
+    "paths": [
+      ".opencode/skills"
+    ]
+  }
+}

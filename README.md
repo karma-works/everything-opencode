@@ -1,6 +1,6 @@
-**Language:** English | [繁體中文](docs/zh-TW/README.md)
+**Language:** English | [简体中文](README.zh-CN.md) | [繁體中文](docs/zh-TW/README.md)
 
-# Everything Claude Code
+# Everything OpenCode
 
 [![Stars](https://img.shields.io/github/stars/affaan-m/everything-claude-code?style=flat)](https://github.com/affaan-m/everything-claude-code/stargazers)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -21,9 +21,11 @@
 
 ---
 
-**The complete collection of Claude Code configs from an Anthropic hackathon winner.**
+**The complete collection of OpenCode configs from an Anthropic hackathon winner.**
 
-Production-ready agents, skills, hooks, commands, rules, and MCP configurations evolved over 10+ months of intensive daily use building real products.
+Production-ready agents, skills, commands, rules, and MCP configurations evolved over 10+ months of intensive daily use building real products.
+
+> **Migration Complete:** This project has been migrated from Claude Code to OpenCode! See [MIGRATION_PLAN.md](MIGRATION_PLAN.md) for details.
 
 ---
 
@@ -65,26 +67,32 @@ This repo is the raw code only. The guides explain everything.
 
 Get up and running in under 2 minutes:
 
-### Step 1: Install the Plugin
+### Step 1: Clone the Repository
 
 ```bash
-# Add marketplace
-/plugin marketplace add affaan-m/everything-claude-code
-
-# Install plugin
-/plugin install everything-claude-code@everything-claude-code
+git clone https://github.com/affaan-m/everything-claude-code.git
+cd everything-claude-code
 ```
 
-### Step 2: Install Rules (Required)
+### Step 2: Install for OpenCode
 
-> ⚠️ **Important:** Claude Code plugins cannot distribute `rules` automatically. Install them manually:
+**Option A: Global Installation (Recommended)**
 
 ```bash
-# Clone the repo first
-git clone https://github.com/affaan-m/everything-claude-code.git
+# Create OpenCode config directory
+mkdir -p ~/.config/opencode
 
-# Copy rules (applies to all projects)
-cp -r everything-claude-code/rules/* ~/.claude/rules/
+# Copy configuration
+cp opencode.json ~/.config/opencode/
+cp -r .opencode/* ~/.config/opencode/
+```
+
+**Option B: Project-Level Installation**
+
+```bash
+# Copy to your project
+cp -r .opencode /path/to/your/project/
+cp opencode.json /path/to/your/project/
 ```
 
 ### Step 3: Start Using
@@ -93,34 +101,37 @@ cp -r everything-claude-code/rules/* ~/.claude/rules/
 # Try a command
 /plan "Add user authentication"
 
+# Invoke an agent
+@code-reviewer
+
 # Check available commands
-/plugin list everything-claude-code@everything-claude-code
+ls .opencode/commands/
 ```
 
-✨ **That's it!** You now have access to 15+ agents, 30+ skills, and 20+ commands.
+✨ **That's it!** You now have access to 13+ agents, 12+ skills, and 20+ commands.
 
 ---
 
 ## 🌐 Cross-Platform Support
 
-This plugin now fully supports **Windows, macOS, and Linux**. All hooks and scripts have been rewritten in Node.js for maximum compatibility.
+This configuration supports **Windows, macOS, and Linux**. All scripts are written in Node.js for maximum compatibility.
 
 ### Package Manager Detection
 
-The plugin automatically detects your preferred package manager (npm, pnpm, yarn, or bun) with the following priority:
+Scripts automatically detect your preferred package manager (npm, pnpm, yarn, or bun) with the following priority:
 
-1. **Environment variable**: `CLAUDE_PACKAGE_MANAGER`
-2. **Project config**: `.claude/package-manager.json`
+1. **Environment variable**: `OPENCODE_PACKAGE_MANAGER`
+2. **Project config**: `.opencode/package-manager.json`
 3. **package.json**: `packageManager` field
 4. **Lock file**: Detection from package-lock.json, yarn.lock, pnpm-lock.yaml, or bun.lockb
-5. **Global config**: `~/.claude/package-manager.json`
+5. **Global config**: `~/.config/opencode/package-manager.json`
 6. **Fallback**: First available package manager
 
 To set your preferred package manager:
 
 ```bash
 # Via environment variable
-export CLAUDE_PACKAGE_MANAGER=pnpm
+export OPENCODE_PACKAGE_MANAGER=pnpm
 
 # Via global config
 node scripts/setup-package-manager.js --global pnpm
@@ -132,111 +143,73 @@ node scripts/setup-package-manager.js --project bun
 node scripts/setup-package-manager.js --detect
 ```
 
-Or use the `/setup-pm` command in Claude Code.
+Or use the `/setup-pm` command.
 
 ---
 
 ## 📦 What's Inside
 
-This repo is a **Claude Code plugin** - install it directly or copy components manually.
+This repo provides **OpenCode configuration files** - copy them to your project or global config.
 
 ```
 everything-claude-code/
-|-- .claude-plugin/   # Plugin and marketplace manifests
-|   |-- plugin.json         # Plugin metadata and component paths
-|   |-- marketplace.json    # Marketplace catalog for /plugin marketplace add
+|-- .opencode/              # OpenCode configuration directory
+|   |-- agents/             # Specialized subagents for delegation
+|   |   |-- planner.md           # Feature implementation planning
+|   |   |-- architect.md         # System design decisions
+|   |   |-- tdd-guide.md         # Test-driven development
+|   |   |-- code-reviewer.md     # Quality and security review
+|   |   |-- security-reviewer.md # Vulnerability analysis
+|   |   |-- build-error-resolver.md
+|   |   |-- e2e-runner.md        # Playwright E2E testing
+|   |   |-- refactor-cleaner.md  # Dead code cleanup
+|   |   |-- doc-updater.md       # Documentation sync
+|   |   |-- go-reviewer.md       # Go code review
+|   |   |-- go-build-resolver.md # Go build error resolution
+|   |
+|   |-- commands/           # Slash commands for quick execution
+|   |   |-- tdd.md              # /tdd - Test-driven development
+|   |   |-- plan.md             # /plan - Implementation planning
+|   |   |-- e2e.md              # /e2e - E2E test generation
+|   |   |-- code-review.md      # /code-review - Quality review
+|   |   |-- build-fix.md        # /build-fix - Fix build errors
+|   |   |-- refactor-clean.md   # /refactor-clean - Dead code removal
+|   |   |-- setup-pm.md         # /setup-pm - Configure package manager
+|   |   |-- go-review.md        # /go-review - Go code review
+|   |   |-- go-test.md          # /go-test - Go TDD workflow
+|   |   |-- go-build.md         # /go-build - Fix Go build errors
+|   |
+|   |-- skills/             # Workflow definitions and domain knowledge
+|   |   |-- coding-standards/           # Language best practices
+|   |   |-- backend-patterns/           # API, database, caching patterns
+|   |   |-- security-review/            # Security checklist
+|   |   |-- eval-harness/               # Verification loop evaluation
+|   |   |-- python-testing/             # Python testing patterns
+|   |   |-- python-patterns/            # Python best practices
+|   |   |-- golang-testing/             # Go testing patterns
+|   |   |-- strategic-compact/          # Context compaction
+|   |
+|   |-- rules/              # Always-follow guidelines
+|   |   |-- security.md         # Mandatory security checks
+|   |   |-- coding-style.md     # Immutability, file organization
+|   |   |-- testing.md          # TDD, 80% coverage requirement
+|   |   |-- git-workflow.md     # Commit format, PR process
+|   |   |-- agents.md           # When to delegate to subagents
+|   |   |-- performance.md      # Model selection, context management
+|   |   |-- hooks.md            # Hook usage guidelines
+|   |   |-- patterns.md         # Design patterns
+|   |
+|   |-- AGENTS.md           # Project-specific instructions
 |
-|-- agents/           # Specialized subagents for delegation
-|   |-- planner.md           # Feature implementation planning
-|   |-- architect.md         # System design decisions
-|   |-- tdd-guide.md         # Test-driven development
-|   |-- code-reviewer.md     # Quality and security review
-|   |-- security-reviewer.md # Vulnerability analysis
-|   |-- build-error-resolver.md
-|   |-- e2e-runner.md        # Playwright E2E testing
-|   |-- refactor-cleaner.md  # Dead code cleanup
-|   |-- doc-updater.md       # Documentation sync
-|   |-- go-reviewer.md       # Go code review (NEW)
-|   |-- go-build-resolver.md # Go build error resolution (NEW)
+|-- opencode.json           # OpenCode configuration file
+|-- AGENTS.md               # Root-level instructions
 |
-|-- skills/           # Workflow definitions and domain knowledge
-|   |-- coding-standards/           # Language best practices
-|   |-- backend-patterns/           # API, database, caching patterns
-|   |-- frontend-patterns/          # React, Next.js patterns
-|   |-- continuous-learning/        # Auto-extract patterns from sessions (Longform Guide)
-|   |-- continuous-learning-v2/     # Instinct-based learning with confidence scoring
-|   |-- iterative-retrieval/        # Progressive context refinement for subagents
-|   |-- strategic-compact/          # Manual compaction suggestions (Longform Guide)
-|   |-- tdd-workflow/               # TDD methodology
-|   |-- security-review/            # Security checklist
-|   |-- eval-harness/               # Verification loop evaluation (Longform Guide)
-|   |-- verification-loop/          # Continuous verification (Longform Guide)
-|   |-- golang-patterns/            # Go idioms and best practices (NEW)
-|   |-- golang-testing/             # Go testing patterns, TDD, benchmarks (NEW)
-|
-|-- commands/         # Slash commands for quick execution
-|   |-- tdd.md              # /tdd - Test-driven development
-|   |-- plan.md             # /plan - Implementation planning
-|   |-- e2e.md              # /e2e - E2E test generation
-|   |-- code-review.md      # /code-review - Quality review
-|   |-- build-fix.md        # /build-fix - Fix build errors
-|   |-- refactor-clean.md   # /refactor-clean - Dead code removal
-|   |-- learn.md            # /learn - Extract patterns mid-session (Longform Guide)
-|   |-- checkpoint.md       # /checkpoint - Save verification state (Longform Guide)
-|   |-- verify.md           # /verify - Run verification loop (Longform Guide)
-|   |-- setup-pm.md         # /setup-pm - Configure package manager
-|   |-- go-review.md        # /go-review - Go code review (NEW)
-|   |-- go-test.md          # /go-test - Go TDD workflow (NEW)
-|   |-- go-build.md         # /go-build - Fix Go build errors (NEW)
-|   |-- skill-create.md     # /skill-create - Generate skills from git history (NEW)
-|   |-- instinct-status.md  # /instinct-status - View learned instincts (NEW)
-|   |-- instinct-import.md  # /instinct-import - Import instincts (NEW)
-|   |-- instinct-export.md  # /instinct-export - Export instincts (NEW)
-|   |-- evolve.md           # /evolve - Cluster instincts into skills (NEW)
-|
-|-- rules/            # Always-follow guidelines (copy to ~/.claude/rules/)
-|   |-- security.md         # Mandatory security checks
-|   |-- coding-style.md     # Immutability, file organization
-|   |-- testing.md          # TDD, 80% coverage requirement
-|   |-- git-workflow.md     # Commit format, PR process
-|   |-- agents.md           # When to delegate to subagents
-|   |-- performance.md      # Model selection, context management
-|
-|-- hooks/            # Trigger-based automations
-|   |-- hooks.json                # All hooks config (PreToolUse, PostToolUse, Stop, etc.)
-|   |-- memory-persistence/       # Session lifecycle hooks (Longform Guide)
-|   |-- strategic-compact/        # Compaction suggestions (Longform Guide)
-|
-|-- scripts/          # Cross-platform Node.js scripts (NEW)
-|   |-- lib/                     # Shared utilities
-|   |   |-- utils.js             # Cross-platform file/path/system utilities
-|   |   |-- package-manager.js   # Package manager detection and selection
-|   |-- hooks/                   # Hook implementations
-|   |   |-- session-start.js     # Load context on session start
-|   |   |-- session-end.js       # Save state on session end
-|   |   |-- pre-compact.js       # Pre-compaction state saving
-|   |   |-- suggest-compact.js   # Strategic compaction suggestions
-|   |   |-- evaluate-session.js  # Extract patterns from sessions
-|   |-- setup-package-manager.js # Interactive PM setup
-|
-|-- tests/            # Test suite (NEW)
-|   |-- lib/                     # Library tests
-|   |-- hooks/                   # Hook tests
-|   |-- run-all.js               # Run all tests
-|
-|-- contexts/         # Dynamic system prompt injection contexts (Longform Guide)
-|   |-- dev.md              # Development mode context
-|   |-- review.md           # Code review mode context
-|   |-- research.md         # Research/exploration mode context
-|
-|-- examples/         # Example configurations and sessions
-|   |-- CLAUDE.md           # Example project-level config
-|   |-- user-CLAUDE.md      # Example user-level config
-|
-|-- mcp-configs/      # MCP server configurations
-|   |-- mcp-servers.json    # GitHub, Supabase, Vercel, Railway, etc.
-|
-|-- marketplace.json  # Self-hosted marketplace config (for /plugin marketplace add)
+|-- agents/                 # Source: Agent definitions (copied to .opencode/)
+|-- commands/               # Source: Command definitions (copied to .opencode/)
+|-- skills/                 # Source: Skill definitions (copied to .opencode/)
+|-- rules/                  # Source: Rule definitions (copied to .opencode/)
+|-- scripts/                # Cross-platform Node.js scripts
+|-- mcp-configs/            # MCP server configurations
 ```
 
 ---
@@ -276,99 +249,85 @@ Both options create:
 - **Instinct collections** - For continuous-learning-v2
 - **Pattern extraction** - Learns from your commit history
 
-### 🧠 Continuous Learning v2
+### 🧠 Continuous Learning
 
-The instinct-based learning system automatically learns your patterns:
-
-```bash
-/instinct-status        # Show learned instincts with confidence
-/instinct-import <file> # Import instincts from others
-/instinct-export        # Export your instincts for sharing
-/evolve                 # Cluster related instincts into skills
-```
-
-See `skills/continuous-learning-v2/` for full documentation.
+**Note:** Continuous learning features (instincts, pattern extraction) are not available in OpenCode. These features were specific to Claude Code. See [MIGRATION_PLAN.md](MIGRATION_PLAN.md) for details on potential custom implementations.
 
 ---
 
 ## 📋 Requirements
 
-### Claude Code CLI Version
+### OpenCode CLI
 
-**Minimum version: v2.1.0 or later**
-
-This plugin requires Claude Code CLI v2.1.0+ due to changes in how the plugin system handles hooks.
+This configuration requires [OpenCode](https://opencode.ai) CLI.
 
 Check your version:
 ```bash
-claude --version
+opencode --version
 ```
 
-### Important: Hooks Auto-Loading Behavior
+### Important Notes
 
-> ⚠️ **For Contributors:** Do NOT add a `"hooks"` field to `.claude-plugin/plugin.json`. This is enforced by a regression test.
-
-Claude Code v2.1+ **automatically loads** `hooks/hooks.json` from any installed plugin by convention. Explicitly declaring it in `plugin.json` causes a duplicate detection error:
-
-```
-Duplicate hooks file detected: ./hooks/hooks.json resolves to already-loaded file
-```
-
-**History:** This has caused repeated fix/revert cycles in this repo ([#29](https://github.com/affaan-m/everything-claude-code/issues/29), [#52](https://github.com/affaan-m/everything-claude-code/issues/52), [#103](https://github.com/affaan-m/everything-claude-code/issues/103)). The behavior changed between Claude Code versions, leading to confusion. We now have a regression test to prevent this from being reintroduced.
+- **Context Window Management**: Don't enable all MCPs at once. Your context window can shrink significantly with too many tools enabled.
+- **Rule of thumb**: Keep under 10 MCPs enabled per project, under 80 tools active.
+- **Skills**: Are automatically loaded from `.opencode/skills/` (backward compatible with `.claude/skills/`)
 
 ---
 
 ## 📥 Installation
 
-### Option 1: Install as Plugin (Recommended)
+### Option 1: Global Installation (Recommended)
 
-The easiest way to use this repo - install as a Claude Code plugin:
+Install for all projects:
 
 ```bash
-# Add this repo as a marketplace
-/plugin marketplace add affaan-m/everything-claude-code
+# Clone the repo
+git clone https://github.com/affaan-m/everything-claude-code.git
+cd everything-claude-code
 
-# Install the plugin
-/plugin install everything-claude-code@everything-claude-code
+# Create OpenCode config directory
+mkdir -p ~/.config/opencode
+
+# Copy configuration files
+cp opencode.json ~/.config/opencode/
+cp -r .opencode/agents ~/.config/opencode/
+cp -r .opencode/commands ~/.config/opencode/
+cp -r .opencode/skills ~/.config/opencode/
+cp -r .opencode/rules ~/.config/opencode/
+
+# Optional: Copy AGENTS.md
+cp AGENTS.md ~/.config/opencode/
 ```
-
-Or add directly to your `~/.claude/settings.json`:
-
-```json
-{
-  "extraKnownMarketplaces": {
-    "everything-claude-code": {
-      "source": {
-        "source": "github",
-        "repo": "affaan-m/everything-claude-code"
-      }
-    }
-  },
-  "enabledPlugins": {
-    "everything-claude-code@everything-claude-code": true
-  }
-}
-```
-
-This gives you instant access to all commands, agents, skills, and hooks.
-
-> **Note:** The Claude Code plugin system does not support distributing `rules` via plugins ([upstream limitation](https://code.claude.com/docs/en/plugins-reference)). You need to install rules manually:
->
-> ```bash
-> # Clone the repo first
-> git clone https://github.com/affaan-m/everything-claude-code.git
->
-> # Option A: User-level rules (applies to all projects)
-> cp -r everything-claude-code/rules/* ~/.claude/rules/
->
-> # Option B: Project-level rules (applies to current project only)
-> mkdir -p .claude/rules
-> cp -r everything-claude-code/rules/* .claude/rules/
-> ```
 
 ---
 
-### 🔧 Option 2: Manual Installation
+### Option 2: Project-Level Installation
+
+Install for a specific project:
+
+```bash
+# Clone the repo
+git clone https://github.com/affaan-m/everything-claude-code.git
+cd everything-claude-code
+
+# Copy to your project
+cp -r .opencode /path/to/your/project/
+cp opencode.json /path/to/your/project/
+cp AGENTS.md /path/to/your/project/
+```
+
+Or if you're already in your project directory:
+
+```bash
+# From your project root
+cp -r /path/to/everything-claude-code/.opencode ./
+cp /path/to/everything-claude-code/opencode.json ./
+cp /path/to/everything-claude-code/AGENTS.md ./
+```
+
+---
+
+### Option 3: Manual Component Installation
 
 If you prefer manual control over what's installed:
 
@@ -376,28 +335,36 @@ If you prefer manual control over what's installed:
 # Clone the repo
 git clone https://github.com/affaan-m/everything-claude-code.git
 
-# Copy agents to your Claude config
-cp everything-claude-code/agents/*.md ~/.claude/agents/
+# Copy specific agents
+cp everything-claude-code/.opencode/agents/code-reviewer.md ~/.config/opencode/agents/
 
-# Copy rules
-cp everything-claude-code/rules/*.md ~/.claude/rules/
+# Copy specific commands
+cp everything-claude-code/.opencode/commands/plan.md ~/.config/opencode/commands/
 
-# Copy commands
-cp everything-claude-code/commands/*.md ~/.claude/commands/
+# Copy specific skills
+cp -r everything-claude-code/.opencode/skills/python-testing ~/.config/opencode/skills/
 
-# Copy skills
-cp -r everything-claude-code/skills/* ~/.claude/skills/
+# Copy specific rules
+cp everything-claude-code/.opencode/rules/security.md ~/.config/opencode/rules/
 ```
-
-#### Add hooks to settings.json
-
-Copy the hooks from `hooks/hooks.json` to your `~/.claude/settings.json`.
 
 #### Configure MCPs
 
-Copy desired MCP servers from `mcp-configs/mcp-servers.json` to your `~/.claude.json`.
+Edit `~/.config/opencode/opencode.json` to enable desired MCP servers:
 
-**Important:** Replace `YOUR_*_HERE` placeholders with your actual API keys.
+```json
+{
+  "mcp": {
+    "github": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-github"],
+      "enabled": true
+    }
+  }
+}
+```
+
+**Important:** Set required environment variables (e.g., `GITHUB_PERSONAL_ACCESS_TOKEN`) before using MCP servers.
 
 ---
 
@@ -405,14 +372,25 @@ Copy desired MCP servers from `mcp-configs/mcp-servers.json` to your `~/.claude.
 
 ### Agents
 
-Subagents handle delegated tasks with limited scope. Example:
+Subagents handle delegated tasks with limited scope. Invoke with `@agent-name`. Example:
 
 ```markdown
 ---
-name: code-reviewer
 description: Reviews code for quality, security, and maintainability
-tools: ["Read", "Grep", "Glob", "Bash"]
-model: opus
+mode: subagent
+model: anthropic/claude-sonnet-4-5
+temperature: 0.1
+tools:
+  read: true
+  grep: true
+  glob: true
+  bash: true
+  edit: false
+  write: false
+permission:
+  bash:
+    "git *": allow
+    "*": ask
 ---
 
 You are a senior code reviewer...
@@ -434,28 +412,42 @@ Skills are workflow definitions invoked by commands or agents:
 
 ### Hooks
 
-Hooks fire on tool events. Example - warn about console.log:
+**Note:** OpenCode uses a different hook system than Claude Code. Hooks are implemented as JavaScript/TypeScript plugins in `.opencode/plugins/`.
 
-```json
-{
-  "matcher": "tool == \"Edit\" && tool_input.file_path matches \"\\\\.(ts|tsx|js|jsx)$\"",
-  "hooks": [{
-    "type": "command",
-    "command": "#!/bin/bash\ngrep -n 'console\\.log' \"$file_path\" && echo '[Hook] Remove console.log' >&2"
-  }]
+Example plugin structure:
+
+```typescript
+// .opencode/plugins/hooks.ts
+import type { Plugin } from "@opencode-ai/plugin"
+
+export const HooksPlugin: Plugin = async ({ $ }) => {
+  return {
+    "tool.execute.after": async (input, output) => {
+      if (input.tool === "edit") {
+        console.log(`Edited: ${output.args.filePath}`)
+      }
+    }
+  }
 }
 ```
 
+See [MIGRATION_PLAN.md](MIGRATION_PLAN.md) for details on converting Claude Code hooks to OpenCode plugins.
+
 ### Rules
 
-Rules are always-follow guidelines. Keep them modular:
+Rules are always-follow guidelines referenced in `opencode.json`:
 
+```json
+{
+  "instructions": [
+    "~/.config/opencode/rules/security.md",
+    "~/.config/opencode/rules/coding-style.md",
+    "~/.config/opencode/rules/testing.md"
+  ]
+}
 ```
-~/.claude/rules/
-  security.md      # No hardcoded secrets
-  coding-style.md  # Immutability, file limits
-  testing.md       # TDD, coverage requirements
-```
+
+Keep them modular in `~/.config/opencode/rules/` or `.opencode/rules/`.
 
 ---
 
@@ -499,9 +491,9 @@ Please contribute! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## 📖 Background
 
-I've been using Claude Code since the experimental rollout. Won the Anthropic x Forum Ventures hackathon in Sep 2025 building [zenith.chat](https://zenith.chat) with [@DRodriguezFX](https://x.com/DRodriguezFX) - entirely using Claude Code.
+I've been using AI coding assistants since the experimental rollout. Won the Anthropic x Forum Ventures hackathon in Sep 2025 building [zenith.chat](https://zenith.chat) with [@DRodriguezFX](https://x.com/DRodriguezFX) - entirely using AI-powered development.
 
-These configs are battle-tested across multiple production applications.
+These configs are battle-tested across multiple production applications and have been migrated from Claude Code to OpenCode.
 
 ---
 
@@ -509,14 +501,26 @@ These configs are battle-tested across multiple production applications.
 
 ### Context Window Management
 
-**Critical:** Don't enable all MCPs at once. Your 200k context window can shrink to 70k with too many tools enabled.
+**Critical:** Don't enable all MCPs at once. Your context window can shrink significantly with too many tools enabled.
 
 Rule of thumb:
-- Have 20-30 MCPs configured
+- Have 20-30 MCPs configured in `opencode.json`
 - Keep under 10 enabled per project
 - Under 80 tools active
 
-Use `disabledMcpServers` in project config to disable unused ones.
+Use `"enabled": false` in the MCP config to disable unused servers:
+
+```json
+{
+  "mcp": {
+    "github": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-github"],
+      "enabled": false
+    }
+  }
+}
+```
 
 ### Customization
 
