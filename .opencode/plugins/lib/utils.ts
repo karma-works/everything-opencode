@@ -35,6 +35,10 @@ export function getLearnedSkillsDir(): string {
  * Ensure a directory exists
  */
 export function ensureDir(dirPath: string): string {
+  if (!dirPath || typeof dirPath !== 'string') {
+    console.error(`ensureDir: dirPath must be a string, got ${typeof dirPath}:`, dirPath);
+    return '';
+  }
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath, { recursive: true });
   }
@@ -128,6 +132,14 @@ export function findFiles(dir: string, pattern: string, options: { maxAge?: numb
  * Write a text file
  */
 export function writeFile(filePath: string, content: string): void {
+  if (!filePath || typeof filePath !== 'string') {
+    console.error(`writeFile: filePath must be a string, got ${typeof filePath}:`, filePath);
+    return;
+  }
+  if (typeof content !== 'string') {
+    console.error(`writeFile: content must be a string, got ${typeof content}`);
+    return;
+  }
   ensureDir(path.dirname(filePath));
   fs.writeFileSync(filePath, content, 'utf8');
 }
@@ -136,6 +148,14 @@ export function writeFile(filePath: string, content: string): void {
  * Append to a text file
  */
 export function appendFile(filePath: string, content: string): void {
+  if (!filePath || typeof filePath !== 'string') {
+    console.error(`appendFile: filePath must be a string, got ${typeof filePath}:`, filePath);
+    return;
+  }
+  if (typeof content !== 'string') {
+    console.error(`appendFile: content must be a string, got ${typeof content}`);
+    return;
+  }
   ensureDir(path.dirname(filePath));
   fs.appendFileSync(filePath, content, 'utf8');
 }

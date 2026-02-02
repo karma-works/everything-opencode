@@ -2,7 +2,6 @@
   "$schema": "https://opencode.ai/config.json",
   "model": "anthropic/claude-sonnet-4-5",
   "small_model": "anthropic/claude-haiku-4-5",
-  
   "instructions": [
     ".opencode/rules/security.md",
     ".opencode/rules/coding-style.md",
@@ -13,7 +12,12 @@
     ".opencode/rules/hooks.md",
     ".opencode/rules/patterns.md"
   ],
-  
+  "plugin": [
+    "./.opencode/plugins/session-manager.ts",
+    "./.opencode/plugins/tool-guardrails.ts",
+    "./.opencode/plugins/code-quality.ts",
+    "./.opencode/plugins/strategic-compact.ts"
+  ],
   "agent": {
     "code-reviewer": {
       "description": "Expert code review specialist for quality, security, and maintainability",
@@ -185,30 +189,45 @@
       }
     }
   },
-  
   "mcp": {
     "github": {
       "type": "local",
-      "command": ["npx", "-y", "@modelcontextprotocol/server-github"],
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
       "enabled": false
     },
     "memory": {
       "type": "local",
-      "command": ["npx", "-y", "@modelcontextprotocol/server-memory"],
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ],
       "enabled": false
     },
     "sequential-thinking": {
       "type": "local",
-      "command": ["npx", "-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
       "enabled": false
     },
     "filesystem": {
       "type": "local",
-      "command": ["npx", "-y", "@modelcontextprotocol/server-filesystem", "."],
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "."
+      ],
       "enabled": false
     }
   },
-  
   "permission": {
     "bash": "ask",
     "edit": "ask",
