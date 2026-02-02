@@ -33,6 +33,24 @@ OpenCode supports the same core extensibility features as Claude Code, with **si
 | **Plugins** | Marketplace-based | Local files or npm packages | ✅ Supported |
 | **Contexts** | Dynamic injection | Via plugins or config | ✅ Supported |
 
+### Backward Compatibility
+
+**OpenCode automatically supports Claude Code conventions:**
+
+| Feature | Claude Location | OpenCode Support | Action Required |
+|---------|----------------|------------------|-----------------|
+| **Project Rules** | `CLAUDE.md` | ✅ Auto-detected if no `AGENTS.md` | Optional rename |
+| **Global Rules** | `~/.claude/CLAUDE.md` | ✅ Fallback if no `~/.config/opencode/AGENTS.md` | Optional migration |
+| **Skills** | `.claude/skills/` | ✅ Auto-detected alongside `.opencode/skills/` | No action needed |
+| **Global Skills** | `~/.claude/skills/` | ✅ Auto-detected | No action needed |
+
+**To disable backward compatibility:**
+```bash
+export OPENCODE_DISABLE_CLAUDE_CODE=1              # Disable all .claude support
+export OPENCODE_DISABLE_CLAUDE_CODE_PROMPT=1       # Disable only ~/.claude/CLAUDE.md
+export OPENCODE_DISABLE_CLAUDE_CODE_SKILLS=1       # Disable only .claude/skills
+```
+
 ### Configuration Precedence
 
 OpenCode merges configurations from multiple sources (later overrides earlier):
@@ -133,7 +151,48 @@ You are a senior code reviewer...
 }
 ```
 
-**Migration:** Direct copy with optional JSON configuration
+**Agent Format Differences:**
+
+| Feature | Claude Code | OpenCode |
+|---------|-------------|----------|
+| **Frontmatter** | `name`, `description`, `tools`, `model` | `description`, `mode`, `model`, `tools`, `permission`, `temperature`, `steps`, `color` |
+| **Invocation** | `@agent-name` | `@agent-name` (same) |
+| **Model** | `opus`, `sonnet`, `haiku` | `anthropic/claude-sonnet-4-5` format |
+| **Tool Access** | Array: `["Read", "Edit"]` | Object: `{"read": true, "edit": false}` |
+| **Modes** | Implicit | Explicit: `primary`, `subagent`, `all` |
+
+**OpenCode Agent Example:**
+```markdown
+---
+description: Reviews code for quality and best practices
+mode: subagent
+model: anthropic/claude-sonnet-4-5
+temperature: 0.1
+tools:
+  write: false
+  edit: false
+  bash: false
+permission:
+  bash:
+    "git *": allow
+    "grep *": allow
+    "*": ask
+---
+
+You are a senior code reviewer. Focus on:
+- Code quality and best practices
+- Security vulnerabilities
+- Performance implications
+
+Provide constructive feedback without making direct changes.
+```
+
+**Migration:**
+- Convert tool arrays to tool objects
+- Add `mode: subagent` for specialized agents
+- Update model identifiers to provider/model format
+- Use `permission` for fine-grained access control
+- Optional: Add `temperature`, `steps`, `color` for customization
 
 ### 2. Commands Migration ✅
 
@@ -173,28 +232,112 @@ Create React component named $ARGUMENTS:
 Generate TypeScript component file...
 ```
 
-**Migration:** Copy files, enhance with `!` for bash and `$ARGUMENTS` for parameters
+**Enhanced Features (OpenCode Additions):**
 
-### 3. Skills Migration ✅
+1. **Positional Arguments:**
+```markdown
+---
+description: Create a file with content
+---
+Create file $1 in directory $2 with content:
+$3
+```
+Usage: `/create-file config.json src '{ "key": "value" }'`
 
-**Options:**
-1. **AGENTS.md** - Central project instructions file
-2. **`.opencode/skills/`** - Individual skill files
-3. **`instructions` array** in `opencode.json`
+2. **Shell Command Execution:**
+```markdown
+---
+description: Analyze test coverage
+---
+Current test status:
+!`npm test`
 
-**OpenCode Configuration:**
+Review failures and suggest improvements.
+```
+
+3. **File References:**
+```markdown
+---
+description: Review component
+---
+Review the implementation in @src/components/Button.tsx
+Compare with @src/components/Button.test.tsx
+```
+
+4. **Agent Assignment:**
+```markdown
+---
+description: Code review
+agent: code-reviewer
+subtask: true
+---
+Review the recent changes for quality and security.
+```
+
+**Migration:** 
+- Direct copy works (commands are nearly identical)
+- Optional: Enhance with new features (positional args, shell execution, file references)
+- Update agent references from Claude format to OpenCode format
+
+### 3. Skills Migration ✅ (Backward Compatible)
+
+**Key Finding:** OpenCode has **built-in backward compatibility** for Claude Code skills!
+
+**Skill Discovery:**
+OpenCode searches for skills in this order:
+- Project: `.opencode/skills/<name>/SKILL.md`
+- Project: `.claude/skills/<name>/SKILL.md` (backward compatible)
+- Global: `~/.config/opencode/skills/<name>/SKILL.md`
+- Global: `~/.claude/skills/<name>/SKILL.md` (backward compatible)
+
+**SKILL.md Format (Compatible with Both):**
+```markdown
+---
+name: python-testing
+description: Python testing patterns, TDD, and pytest best practices
+license: MIT
+compatibility: opencode
+metadata:
+  audience: developers
+  level: intermediate
+---
+
+## When to Use
+
+Reference this skill when writing or reviewing Python tests...
+
+## Best Practices
+
+1. Use pytest fixtures for setup/teardown
+2. Mock external dependencies
+3. Aim for 80%+ coverage
+```
+
+**Skill Naming Requirements:**
+- Must be 1-64 characters
+- Lowercase alphanumeric with single hyphens
+- Cannot start/end with hyphen
+- Cannot contain consecutive hyphens
+- Must match directory name
+- Regex: `^[a-z0-9]+(-[a-z0-9]+)*$`
+
+**Skill Permissions:**
 ```json
 {
-  "instructions": [
-    "CONTRIBUTING.md",
-    "docs/guidelines.md",
-    ".opencode/skills/backend-patterns.md",
-    ".opencode/skills/security-review.md"
-  ]
+  "permission": {
+    "skill": {
+      "*": "allow",
+      "internal-*": "deny",
+      "experimental-*": "ask"
+    }
+  }
 }
 ```
 
-**Migration:** Convert SKILL.md files to AGENTS.md sections or keep as separate files referenced in instructions
+**Migration:** 
+- ✅ **Option 1**: Keep skills in `.claude/skills/` (works automatically)
+- ✅ **Option 2**: Copy to `.opencode/skills/` (recommended for clarity)
+- ✅ **Option 3**: Reference in AGENTS.md or `instructions` array
 
 ### 4. Hooks Migration ⚠️ (Major Change)
 
@@ -262,7 +405,115 @@ export const HooksPlugin: Plugin = async ({ project, client, $ }) => {
 
 **Migration:** Rewrite hooks.json as TypeScript/JavaScript plugins
 
-### 5. Rules Migration ✅
+### 5. Continuous Learning / Instinct System ❌ (Not Supported)
+
+**Claude Code Features:**
+- `/instinct-status` - View learned instincts with confidence scores
+- `/instinct-export` - Export instincts for sharing
+- `/instinct-import` - Import instincts from others
+- `/evolve` - Cluster instincts into skills
+- `/learn` - Extract patterns mid-session
+- `/checkpoint` - Save verification state
+- Session evaluation hooks for automatic pattern extraction
+
+**OpenCode Status:** No built-in equivalent
+
+**Gap Analysis:**
+The continuous learning system relies on:
+1. Session persistence across restarts
+2. Pattern extraction from git history
+3. Persistent storage for learned patterns
+4. Session evaluation hooks
+
+**Recommended Implementation:**
+
+Create a custom plugin with file-based storage:
+
+```typescript
+// .opencode/plugins/continuous-learning.ts
+import type { Plugin } from "@opencode-ai/plugin"
+import { writeFileSync, readFileSync, existsSync, mkdirSync } from "fs"
+import { join } from "path"
+import { homedir } from "os"
+
+const INSTINCTS_DIR = join(homedir(), ".config/opencode/instincts")
+
+export const ContinuousLearningPlugin: Plugin = async ({ client }) => {
+  // Ensure instincts directory exists
+  if (!existsSync(INSTINCTS_DIR)) {
+    mkdirSync(INSTINCTS_DIR, { recursive: true })
+  }
+  
+  return {
+    // Capture patterns on session compaction
+    "experimental.session.compacting": async (input, output) => {
+      const sessionId = input.sessionId
+      const context = output.context
+      
+      // Extract patterns from context
+      const patterns = extractPatterns(context)
+      
+      // Save to disk
+      const instinctFile = join(INSTINCTS_DIR, `${sessionId}.json`)
+      writeFileSync(instinctFile, JSON.stringify({
+        timestamp: new Date().toISOString(),
+        patterns,
+        confidence: calculateConfidence(patterns)
+      }, null, 2))
+      
+      // Inject summary into compaction
+      output.context.push(`## Learned Patterns\n${summarizePatterns(patterns)}`)
+    },
+    
+    // Log session completion
+    "session.idle": async ({ event }) => {
+      await client.app.log({
+        service: "continuous-learning",
+        level: "info",
+        message: "Session completed - patterns extracted",
+        extra: { sessionId: event.properties.sessionId }
+      })
+    }
+  }
+}
+
+function extractPatterns(context: string[]): any[] {
+  // Implement pattern extraction logic
+  return []
+}
+
+function calculateConfidence(patterns: any[]): number {
+  // Implement confidence scoring
+  return 0.8
+}
+
+function summarizePatterns(patterns: any[]): string {
+  // Implement pattern summarization
+  return ""
+}
+```
+
+**Custom Commands for Learning:**
+```markdown
+---
+description: View learned instincts
+---
+Read and display all instinct files from ~/.config/opencode/instincts/
+
+Show:
+1. Top patterns by confidence score
+2. Recently learned patterns
+3. Suggested skills based on clusters
+```
+
+**Migration Decision:**
+- 🔴 **High effort required** - No direct equivalent
+- Options:
+  1. Implement custom plugin (recommended for feature parity)
+  2. Remove continuous learning features from migration
+  3. Document as Claude Code-only feature
+
+### 6. Rules Migration ✅
 
 **Claude Code:** Rules as markdown files in `~/.claude/rules/`
 
@@ -281,7 +532,7 @@ export const HooksPlugin: Plugin = async ({ project, client, $ }) => {
 
 **Migration:** Keep markdown files, reference via instructions config
 
-### 6. MCP Configuration Migration ✅
+### 7. MCP Configuration Migration ✅
 
 **Claude Code:** `~/.claude.json`
 ```json
@@ -309,6 +560,48 @@ export const HooksPlugin: Plugin = async ({ project, client, $ }) => {
 ```
 
 **Migration:** Transform to OpenCode format with `type: local` or `type: remote`
+
+---
+
+## Files to Remove vs Keep
+
+### ❌ Remove (Not Supported in OpenCode)
+
+| File/Directory | Reason |
+|----------------|--------|
+| `.claude-plugin/` | No plugin marketplace in OpenCode |
+| `.claude-plugin/plugin.json` | Different plugin system |
+| `.claude-plugin/marketplace.json` | No marketplace support |
+| `marketplace.json` | No marketplace support |
+| `schemas/plugin.schema.json` | Not needed |
+| `schemas/hooks.schema.json` | Different hook system |
+| `schemas/package-manager.schema.json` | Not needed |
+| `hooks/hooks.json` | Rewrite as TypeScript plugins |
+| `plugins/README.md` | Update for OpenCode |
+
+### ✅ Keep (With Modifications)
+
+| File/Directory | Modification |
+|----------------|--------------|
+| `agents/*.md` | Update frontmatter format, add `mode: subagent` |
+| `commands/*.md` | Direct copy (backward compatible), optional enhancements |
+| `skills/*/` | Direct copy (backward compatible), can stay in `.claude/skills/` |
+| `rules/*.md` | Reference via `instructions` array in opencode.json |
+| `contexts/*.md` | Copy to `.opencode/contexts/` |
+| `mcp-configs/*` | Transform to OpenCode format |
+| `scripts/*` | Update paths, test compatibility |
+| `tests/*` | Update for OpenCode paths |
+
+### 🔧 Environment Variables
+
+| Claude Code | OpenCode | Status |
+|-------------|----------|--------|
+| `CLAUDE_PLUGIN_ROOT` | No direct equivalent | ⚠️ Use relative paths or config |
+| `CLAUDE_PACKAGE_MANAGER` | Not documented | ⚠️ Keep as utility, manual config |
+| `OPENCODE_CONFIG` | ✅ Supported | Use for custom config path |
+| `OPENCODE_CONFIG_DIR` | ✅ Supported | Custom config directory |
+| `OPENCODE_CONFIG_CONTENT` | ✅ Supported | Inline config |
+| `OPENCODE_DISABLE_CLAUDE_CODE` | ✅ Supported | Disable .claude compatibility |
 
 ---
 
@@ -492,11 +785,13 @@ git commit -m "Add OpenCode configuration"
 
 - [ ] **Agents**: Copy 13 agent files to `.opencode/agents/`
 - [ ] **Commands**: Copy 20+ command files, add bash execution (`!`)
-- [ ] **Skills**: Convert to AGENTS.md or `.opencode/skills/`
+- [ ] **Skills**: Convert to AGENTS.md or `.opencode/skills/` (backward compatible)
 - [ ] **Rules**: Move to `instructions` array in config
 - [ ] **Hooks**: Rewrite as JavaScript/TypeScript plugins
 - [ ] **MCP**: Transform configs to OpenCode format
 - [ ] **Scripts**: Update paths, test compatibility
+- [ ] **Continuous Learning**: Decide on custom implementation or removal
+- [ ] **Remove**: Delete `.claude-plugin/`, marketplace files, hooks.json
 
 ### Documentation
 
@@ -606,17 +901,88 @@ export const AutoFormatPlugin: Plugin = async ({ $ }) => {
 
 ---
 
+## Risk Assessment & Recommendations
+
+### Risk Matrix
+
+| Component | Migration Risk | Effort | Recommendation |
+|-----------|---------------|---------|----------------|
+| **Skills** | 🟢 Low | 1 hour | Direct copy, backward compatible |
+| **Commands** | 🟢 Low | 2 hours | Direct copy, can enhance later |
+| **Agents** | 🟢 Low | 3 hours | Update frontmatter format |
+| **Rules** | 🟢 Low | 1 hour | Reference via instructions |
+| **MCP Config** | 🟡 Medium | 2 hours | Transform format |
+| **Hooks** | 🔴 High | 8 hours | Complete rewrite required |
+| **Continuous Learning** | 🔴 High | 16+ hours | Custom implementation needed |
+
+### Quick Start Recommendation
+
+**For Fast Migration (80% of features):**
+
+1. **Phase 1 (Week 1)**: Migrate Skills, Commands, Agents, Rules
+   - ✅ Keep skills in `.claude/skills/` (backward compatible)
+   - ✅ Copy commands to `.opencode/commands/`
+   - ✅ Copy agents to `.opencode/agents/`
+   - ✅ Reference rules in `instructions` array
+
+2. **Phase 2 (Week 2)**: Hooks and MCP
+   - ⚠️ Rewrite critical hooks as TypeScript plugins
+   - ✅ Transform MCP config format
+   - ✅ Create install script
+
+3. **Phase 3 (Optional)**: Advanced Features
+   - 🔴 Implement continuous learning plugin (if needed)
+   - 🔴 Add enhanced command features
+   - 🔴 Create npm package distribution
+
+### Fallback Strategy
+
+If full migration is not feasible:
+
+1. **Keep both versions**:
+   - Maintain `everything-claude-code` for existing users
+   - Create `everything-opencode` for new users
+   - Cross-reference in documentation
+
+2. **Hybrid approach**:
+   - Use OpenCode for daily work (skills, commands, agents work in both)
+   - Use Claude Code for continuous learning features
+   - Document the hybrid workflow
+
+3. **Gradual migration**:
+   - Start with backward-compatible features
+   - Add OpenCode-specific enhancements incrementally
+   - Gather community feedback
+
+---
+
 ## References
 
+### OpenCode Documentation
 - **OpenCode Docs**: https://opencode.ai/docs/
 - **Plugins**: https://opencode.ai/docs/plugins/
 - **Config**: https://opencode.ai/docs/config/
 - **Commands**: https://opencode.ai/docs/commands/
 - **Agents**: https://opencode.ai/docs/agents/
-- **GitHub**: https://github.com/anomalyco/opencode
+- **Skills**: https://opencode.ai/docs/skills/
+- **Rules**: https://opencode.ai/docs/rules/
+- **SDK**: https://opencode.ai/docs/sdk/
+
+### GitHub Resources
+- **OpenCode Repository**: https://github.com/anomalyco/opencode
+- **Issue #299 - Custom Slash Commands**: https://github.com/anomalyco/opencode/issues/299
+- **Community Plugins**: https://opencode.ai/docs/ecosystem
+
+### External Resources
+- **DEV Article - Hooks Guide**: https://dev.to/einarcesar/does-opencode-support-hooks-a-complete-guide-to-extensibility-k3p
+
+### Related Files in This Repository
+- **OPEN_ISSUES.md** - Detailed research findings and open questions
+- **INSTALL.md** - Installation instructions (to be created)
+- **COMPATIBILITY.md** - Feature compatibility matrix (to be created)
 
 ---
 
-*Document Version: 2.0*
+*Document Version: 3.0*
 *Last Updated: 2026-02-02*
-*Status: Ready for Implementation*
+*Status: Ready for Implementation - Comprehensive Research Complete*
