@@ -111,6 +111,44 @@ export const HooksPlugin: Plugin = async ({ project, client, $ }) => {
 
 ---
 
+## Best Practices for Migration
+
+Derived from the architectural shift from JSON-based configuration to TypeScript plugins:
+
+1. **Type Safety**
+   - Define strict interfaces for input/output payloads in hooks.
+   - Use TypeScript to catch errors at compile time rather than runtime.
+   - Avoid `any` types; define schemas for tool arguments.
+
+2. **Error Handling**
+   - **Never crash the session**: Wrap hook logic in `try/catch` blocks.
+   - **Graceful degradation**: If a hook fails (e.g., external tool missing), log a warning but allow the main operation to proceed unless it's a critical security check.
+   - Use descriptive error messages when blocking actions in `tool.execute.before`.
+
+3. **Asynchrony & Performance**
+   - Use `async/await` for all I/O operations.
+   - **Avoid blocking**: Don't run heavy synchronous operations (like large file scans) on the main thread.
+   - **Debounce**: For events that fire frequently (like `file.edited`), implement debouncing to avoid running expensive logic (like linting) on every keystroke/save.
+
+4. **Security**
+   - **Input Validation**: Strictly validate all inputs in `tool.execute.before`. Don't execute shell commands with unsanitized user input.
+   - **Least Privilege**: Only request necessary permissions.
+   - **No Secrets**: Never log environment variables or secrets to console/files.
+
+5. **Modularity**
+   - **Separation of Concerns**: Don't put all logic in one `index.ts`. Split plugins by domain (e.g., `git-hooks.ts`, `safety.ts`, `formatting.ts`).
+   - **Shared Utilities**: Move common logic (file reading, path handling) to a shared utility module to avoid code duplication.
+
+6. **Context Awareness**
+   - Use the provided context API (`client`, `project`) instead of relying on `process.cwd()` or global variables, to support multi-root workspaces and different execution contexts.
+   - Respect the user's configuration and preferences.
+
+7. **Testing**
+   - Write unit tests for plugin logic, mocking the OpenCode API.
+   - Test edge cases (missing files, failed commands, invalid inputs).
+
+---
+
 ## Migration Strategy
 
 ### Phase 1: Core Session Hooks (Priority: High)
