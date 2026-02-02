@@ -105,7 +105,7 @@ Add project-specific rules by:
 ## Support
 
 - **OpenCode Docs**: https://opencode.ai/docs/
-- **Repository**: https://github.com/affaan-m/everything-claude-code
+- **Repository**: https://github.com/karma-works/everything-opencode
 - **Issues**: Report on GitHub
 
 ---
