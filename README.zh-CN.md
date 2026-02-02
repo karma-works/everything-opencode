@@ -70,7 +70,7 @@
 /plugin marketplace add karma-works/everything-opencode
 
 # 安装插件
-/plugin install everything-claude-code@everything-claude-code
+/plugin install everything-opencode@everything-opencode
 ```
 
 ### 第二步：安装规则（必需）
@@ -82,7 +82,7 @@
 git clone https://github.com/karma-works/everything-opencode.git
 
 # 复制规则（应用于所有项目）
-cp -r everything-claude-code/rules/* ~/.claude/rules/
+cp -r everything-opencode/rules/* ~/.claude/rules/
 ```
 
 ### 第三步：开始使用
@@ -92,7 +92,7 @@ cp -r everything-claude-code/rules/* ~/.claude/rules/
 /plan "添加用户认证"
 
 # 查看可用命令
-/plugin list everything-claude-code@everything-claude-code
+/plugin list everything-opencode@everything-opencode
 ```
 
 ✨ **完成！** 你现在可以使用 15+ 代理、30+ 技能和 20+ 命令。
@@ -139,7 +139,7 @@ node scripts/setup-package-manager.js --detect
 这个仓库是一个 **Claude Code 插件** - 直接安装或手动复制组件。
 
 ```
-everything-claude-code/
+everything-opencode/
 |-- .claude-plugin/   # 插件和市场清单
 |   |-- plugin.json         # 插件元数据和组件路径
 |   |-- marketplace.json    # /plugin marketplace add 的市场目录
@@ -300,7 +300,7 @@ everything-claude-code/
 /plugin marketplace add karma-works/everything-opencode
 
 # 安装插件
-/plugin install everything-claude-code@everything-claude-code
+/plugin install everything-opencode@everything-opencode
 ```
 
 或直接添加到你的 `~/.claude/settings.json`：
@@ -308,7 +308,7 @@ everything-claude-code/
 ```json
 {
   "extraKnownMarketplaces": {
-    "everything-claude-code": {
+    "everything-opencode": {
       "source": {
         "source": "github",
         "repo": "karma-works/everything-opencode"
@@ -316,7 +316,7 @@ everything-claude-code/
     }
   },
   "enabledPlugins": {
-    "everything-claude-code@everything-claude-code": true
+    "everything-opencode@everything-opencode": true
   }
 }
 ```
@@ -330,11 +330,11 @@ everything-claude-code/
 > git clone https://github.com/karma-works/everything-opencode.git
 >
 > # 选项 A：用户级规则（应用于所有项目）
-> cp -r everything-claude-code/rules/* ~/.claude/rules/
+> cp -r everything-opencode/rules/* ~/.claude/rules/
 >
 > # 选项 B：项目级规则（仅应用于当前项目）
 > mkdir -p .claude/rules
-> cp -r everything-claude-code/rules/* .claude/rules/
+> cp -r everything-opencode/rules/* .claude/rules/
 > ```
 
 ---
@@ -348,16 +348,16 @@ everything-claude-code/
 git clone https://github.com/karma-works/everything-opencode.git
 
 # 将代理复制到你的 Claude 配置
-cp everything-claude-code/agents/*.md ~/.claude/agents/
+cp everything-opencode/agents/*.md ~/.claude/agents/
 
 # 复制规则
-cp everything-claude-code/rules/*.md ~/.claude/rules/
+cp everything-opencode/rules/*.md ~/.claude/rules/
 
 # 复制命令
-cp everything-claude-code/commands/*.md ~/.claude/commands/
+cp everything-opencode/commands/*.md ~/.claude/commands/
 
 # 复制技能
-cp -r everything-claude-code/skills/* ~/.claude/skills/
+cp -r everything-opencode/skills/* ~/.claude/skills/
 ```
 
 #### 将钩子添加到 settings.json

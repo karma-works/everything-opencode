@@ -951,7 +951,7 @@ export const AutoFormatPlugin: Plugin = async ({ $ }) => {
 If full migration is not feasible:
 
 1. **Keep both versions**:
-   - Maintain `everything-claude-code` for existing users
+   - Maintain `everything-opencode` for existing users
    - Create `everything-opencode` for new users
    - Cross-reference in documentation
 

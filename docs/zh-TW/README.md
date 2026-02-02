@@ -70,7 +70,7 @@
 /plugin marketplace add karma-works/everything-opencode
 
 # 安裝外掛程式
-/plugin install everything-claude-code@everything-claude-code
+/plugin install everything-opencode@everything-opencode
 ```
 
 ### 第二步：安裝規則（必需）
@@ -82,7 +82,7 @@
 git clone https://github.com/karma-works/everything-opencode.git
 
 # 複製規則（應用於所有專案）
-cp -r everything-claude-code/rules/* ~/.claude/rules/
+cp -r everything-opencode/rules/* ~/.claude/rules/
 ```
 
 ### 第三步：開始使用
@@ -92,7 +92,7 @@ cp -r everything-claude-code/rules/* ~/.claude/rules/
 /plan "新增使用者認證"
 
 # 查看可用指令
-/plugin list everything-claude-code@everything-claude-code
+/plugin list everything-opencode@everything-opencode
 ```
 
 ✨ **完成！** 您現在使用 15+ 代理程式、30+ 技能和 20+ 指令。
@@ -139,7 +139,7 @@ node scripts/setup-package-manager.js --detect
 本儲存庫是一個 **Claude Code 外掛程式** - 可直接安裝或手動複製元件。
 
 ```
-everything-claude-code/
+everything-opencode/
 |-- .claude-plugin/   # 外掛程式和市集清單
 |   |-- plugin.json         # 外掛程式中繼資料和元件路徑
 |   |-- marketplace.json    # 用於 /plugin marketplace add 的市集目錄
@@ -267,7 +267,7 @@ everything-claude-code/
 /plugin marketplace add karma-works/everything-opencode
 
 # 安裝外掛程式
-/plugin install everything-claude-code@everything-claude-code
+/plugin install everything-opencode@everything-opencode
 ```
 
 或直接新增到您的 `~/.claude/settings.json`：
@@ -275,7 +275,7 @@ everything-claude-code/
 ```json
 {
   "extraKnownMarketplaces": {
-    "everything-claude-code": {
+    "everything-opencode": {
       "source": {
         "source": "github",
         "repo": "karma-works/everything-opencode"
@@ -283,7 +283,7 @@ everything-claude-code/
     }
   },
   "enabledPlugins": {
-    "everything-claude-code@everything-claude-code": true
+    "everything-opencode@everything-opencode": true
   }
 }
 ```
@@ -301,16 +301,16 @@ everything-claude-code/
 git clone https://github.com/karma-works/everything-opencode.git
 
 # 將代理程式複製到您的 Claude 設定
-cp everything-claude-code/agents/*.md ~/.claude/agents/
+cp everything-opencode/agents/*.md ~/.claude/agents/
 
 # 複製規則
-cp everything-claude-code/rules/*.md ~/.claude/rules/
+cp everything-opencode/rules/*.md ~/.claude/rules/
 
 # 複製指令
-cp everything-claude-code/commands/*.md ~/.claude/commands/
+cp everything-opencode/commands/*.md ~/.claude/commands/
 
 # 複製技能
-cp -r everything-claude-code/skills/* ~/.claude/skills/
+cp -r everything-opencode/skills/* ~/.claude/skills/
 ```
 
 #### 將鉤子新增到 settings.json

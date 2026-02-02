@@ -351,4 +351,4 @@ alias q='cd ~/Desktop/projects'
 
 ---
 
-*Everything covered in both guides is available on GitHub at [everything-claude-code](https://github.com/karma-works/everything-opencode)*
+*Everything covered in both guides is available on GitHub at [everything-opencode](https://github.com/karma-works/everything-opencode)*

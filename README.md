@@ -21,7 +21,7 @@
 
 ---
 
-**The complete collection of OpenCode configs from an Anthropic hackathon winner.**
+**The complete collection of Claude configs from an Anthropic hackathon winner, migrated to OpenCode.**
 
 Production-ready agents, skills, commands, rules, and MCP configurations evolved over 10+ months of intensive daily use building real products.
 
@@ -71,7 +71,7 @@ Get up and running in under 2 minutes:
 
 ```bash
 git clone https://github.com/karma-works/everything-opencode.git
-cd everything-claude-code
+cd everything-opencode
 ```
 
 ### Step 2: Install for OpenCode
@@ -152,7 +152,7 @@ Or use the `/setup-pm` command.
 This repo provides **OpenCode configuration files** - copy them to your project or global config.
 
 ```
-everything-claude-code/
+everything-opencode/
 |-- .opencode/              # OpenCode configuration directory
 |   |-- agents/             # Specialized subagents for delegation
 |   |   |-- planner.md           # Feature implementation planning
@@ -283,7 +283,7 @@ Install for all projects:
 ```bash
 # Clone the repo
 git clone https://github.com/karma-works/everything-opencode.git
-cd everything-claude-code
+cd everything-opencode
 
 # Create OpenCode config directory
 mkdir -p ~/.config/opencode
@@ -308,7 +308,7 @@ Install for a specific project:
 ```bash
 # Clone the repo
 git clone https://github.com/karma-works/everything-opencode.git
-cd everything-claude-code
+cd everything-opencode
 
 # Copy to your project
 cp -r .opencode /path/to/your/project/
@@ -320,9 +320,9 @@ Or if you're already in your project directory:
 
 ```bash
 # From your project root
-cp -r /path/to/everything-claude-code/.opencode ./
-cp /path/to/everything-claude-code/opencode.json ./
-cp /path/to/everything-claude-code/AGENTS.md ./
+cp -r /path/to/everything-opencode/.opencode ./
+cp /path/to/everything-opencode/opencode.json ./
+cp /path/to/everything-opencode/AGENTS.md ./
 ```
 
 ---
@@ -336,16 +336,16 @@ If you prefer manual control over what's installed:
 git clone https://github.com/karma-works/everything-opencode.git
 
 # Copy specific agents
-cp everything-claude-code/.opencode/agents/code-reviewer.md ~/.config/opencode/agents/
+cp everything-opencode/.opencode/agents/code-reviewer.md ~/.config/opencode/agents/
 
 # Copy specific commands
-cp everything-claude-code/.opencode/commands/plan.md ~/.config/opencode/commands/
+cp everything-opencode/.opencode/commands/plan.md ~/.config/opencode/commands/
 
 # Copy specific skills
-cp -r everything-claude-code/.opencode/skills/python-testing ~/.config/opencode/skills/
+cp -r everything-opencode/.opencode/skills/python-testing ~/.config/opencode/skills/
 
 # Copy specific rules
-cp everything-claude-code/.opencode/rules/security.md ~/.config/opencode/rules/
+cp everything-opencode/.opencode/rules/security.md ~/.config/opencode/rules/
 ```
 
 #### Configure MCPs
