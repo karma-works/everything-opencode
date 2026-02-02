@@ -213,11 +213,5 @@
     "bash": "ask",
     "edit": "ask",
     "write": "ask"
-  },
-  
-  "skill": {
-    "paths": [
-      ".opencode/skills"
-    ]
   }
 }
