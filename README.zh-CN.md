@@ -1,6 +1,6 @@
 # Everything Claude Code
 
-[![Stars](https://img.shields.io/github/stars/affaan-m/everything-claude-code?style=flat)](https://github.com/affaan-m/everything-claude-code/stargazers)
+[![Stars](https://img.shields.io/github/stars/karma-works/everything-opencode?style=flat)](https://github.com/karma-works/everything-opencode/stargazers)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Shell](https://img.shields.io/badge/-Shell-4EAA25?logo=gnu-bash&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?logo=typescript&logoColor=white)
@@ -67,7 +67,7 @@
 
 ```bash
 # 添加市场
-/plugin marketplace add affaan-m/everything-claude-code
+/plugin marketplace add karma-works/everything-opencode
 
 # 安装插件
 /plugin install everything-claude-code@everything-claude-code
@@ -79,7 +79,7 @@
 
 ```bash
 # 首先克隆仓库
-git clone https://github.com/affaan-m/everything-claude-code.git
+git clone https://github.com/karma-works/everything-opencode.git
 
 # 复制规则（应用于所有项目）
 cp -r everything-claude-code/rules/* ~/.claude/rules/
@@ -297,7 +297,7 @@ everything-claude-code/
 
 ```bash
 # 将此仓库添加为市场
-/plugin marketplace add affaan-m/everything-claude-code
+/plugin marketplace add karma-works/everything-opencode
 
 # 安装插件
 /plugin install everything-claude-code@everything-claude-code
@@ -311,7 +311,7 @@ everything-claude-code/
     "everything-claude-code": {
       "source": {
         "source": "github",
-        "repo": "affaan-m/everything-claude-code"
+        "repo": "karma-works/everything-opencode"
       }
     }
   },
@@ -327,7 +327,7 @@ everything-claude-code/
 >
 > ```bash
 > # 首先克隆仓库
-> git clone https://github.com/affaan-m/everything-claude-code.git
+> git clone https://github.com/karma-works/everything-opencode.git
 >
 > # 选项 A：用户级规则（应用于所有项目）
 > cp -r everything-claude-code/rules/* ~/.claude/rules/
@@ -345,7 +345,7 @@ everything-claude-code/
 
 ```bash
 # 克隆仓库
-git clone https://github.com/affaan-m/everything-claude-code.git
+git clone https://github.com/karma-works/everything-opencode.git
 
 # 将代理复制到你的 Claude 配置
 cp everything-claude-code/agents/*.md ~/.claude/agents/
@@ -501,7 +501,7 @@ node tests/hooks/hooks.test.js
 
 ## 🌟 Star 历史
 
-[![Star History Chart](https://api.star-history.com/svg?repos=affaan-m/everything-claude-code&type=Date)](https://star-history.com/#affaan-m/everything-claude-code&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=karma-works/everything-opencode&type=Date)](https://star-history.com/#karma-works/everything-opencode&Date)
 
 ---
 

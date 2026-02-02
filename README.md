@@ -2,7 +2,7 @@
 
 # Everything OpenCode
 
-[![Stars](https://img.shields.io/github/stars/affaan-m/everything-claude-code?style=flat)](https://github.com/affaan-m/everything-claude-code/stargazers)
+[![Stars](https://img.shields.io/github/stars/karma-works/everything-opencode?style=flat)](https://github.com/karma-works/everything-opencode/stargazers)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Shell](https://img.shields.io/badge/-Shell-4EAA25?logo=gnu-bash&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?logo=typescript&logoColor=white)
@@ -70,7 +70,7 @@ Get up and running in under 2 minutes:
 ### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/affaan-m/everything-claude-code.git
+git clone https://github.com/karma-works/everything-opencode.git
 cd everything-claude-code
 ```
 
@@ -282,7 +282,7 @@ Install for all projects:
 
 ```bash
 # Clone the repo
-git clone https://github.com/affaan-m/everything-claude-code.git
+git clone https://github.com/karma-works/everything-opencode.git
 cd everything-claude-code
 
 # Create OpenCode config directory
@@ -307,7 +307,7 @@ Install for a specific project:
 
 ```bash
 # Clone the repo
-git clone https://github.com/affaan-m/everything-claude-code.git
+git clone https://github.com/karma-works/everything-opencode.git
 cd everything-claude-code
 
 # Copy to your project
@@ -333,7 +333,7 @@ If you prefer manual control over what's installed:
 
 ```bash
 # Clone the repo
-git clone https://github.com/affaan-m/everything-claude-code.git
+git clone https://github.com/karma-works/everything-opencode.git
 
 # Copy specific agents
 cp everything-claude-code/.opencode/agents/code-reviewer.md ~/.config/opencode/agents/
@@ -534,7 +534,7 @@ These configs work for my workflow. You should:
 
 ## 🌟 Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=affaan-m/everything-claude-code&type=Date)](https://star-history.com/#affaan-m/everything-claude-code&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=karma-works/everything-opencode&type=Date)](https://star-history.com/#karma-works/everything-opencode&Date)
 
 ---
 
